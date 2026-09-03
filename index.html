@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduFocus - Learning Dashboard</title>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: { 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8' }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 font-sans transition-colors duration-200">
+
+  <!-- Header / Navbar -->
+  <header class="sticky top-0 z-40 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <span class="text-2xl">⚡</span>
+        <h1 class="text-xl font-bold text-brand-600 dark:text-brand-500">EduFocus</h1>
+      </div>
+
+      <nav class="flex items-center gap-2">
+        <a href="index.html" class="px-3 py-2 text-sm font-medium rounded-lg bg-brand-600 text-white">Dashboard</a>
+        <a href="materi.html" class="px-3 py-2 text-sm font-medium rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700">Materi</a>
+        <a href="ai.html" class="px-3 py-2 text-sm font-medium rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700">AI Assistant</a>
+        <button id="theme-toggle" onclick="toggleTheme()" class="p-2 text-lg rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700">🌙</button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Main Content Layout -->
+  <main class="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+    
+    <!-- Kolom Utama: Upload Materi & Quick Status -->
+    <section class="lg:col-span-2 space-y-6">
+      
+      <!-- Upload Card -->
+      <div class="p-6 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-4">
+        <div>
+          <h2 class="text-lg font-bold">📁 Upload Materi & Dokumen</h2>
+          <p class="text-sm text-slate-500 dark:text-slate-400">Unggah file PDF/Dokumen ke database agar dapat dibaca oleh AI Assistant.</p>
+        </div>
+
+        <div class="space-y-3 p-4 bg-slate-50 dark:bg-slate-900 border border-dashed border-slate-300 dark:border-slate-700 rounded-lg">
+          <div class="flex items-center gap-4">
+            <input type="file" id="material-file-input" accept=".pdf,.docx,.doc,.txt" class="hidden" onchange="processFileUpload(event)">
+            <button onclick="document.getElementById('material-file-input').click()" class="px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white text-sm font-medium rounded-lg shadow-sm transition-all">
+              📎 Pilih File Dokumen
+            </button>
+            <span id="file-upload-status" class="text-sm text-slate-500 dark:text-slate-400">Belum ada file dipilih.</span>
+          </div>
+
+          <!-- Progress Bar -->
+          <div id="progress-container" class="hidden space-y-1 pt-2">
+            <div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-3 overflow-hidden">
+              <div id="progress-bar" class="bg-brand-600 h-3 rounded-full transition-all duration-150" style="width: 0%"></div>
+            </div>
+            <div class="flex justify-between text-xs text-slate-500 dark:text-slate-400 font-mono">
+              <span id="progress-text">Memuat...</span>
+              <span id="progress-percent">0%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Daftar Dokumen Tersimpan -->
+        <div>
+          <div class="flex items-center justify-between mb-2">
+            <h3 class="text-sm font-semibold">Dokumen Terbaru:</h3>
+            <a href="materi.html" class="text-xs text-brand-600 dark:text-brand-500 hover:underline">Lihat Semua di Halaman Materi &rarr;</a>
+          </div>
+          <ul id="context-file-items" class="divide-y divide-slate-100 dark:divide-slate-700 text-sm">
+            <li class="py-2 text-slate-400">Memuat data...</li>
+          </ul>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Sidebar: Widget Pomodoro & Task Quick View -->
+    <aside class="space-y-6">
+      
+      <!-- Timer Pomodoro -->
+      <div class="p-6 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm text-center">
+        <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Sesi Fokus Pomodoro</h3>
+        <div id="timer-display" class="text-5xl font-mono font-bold text-brand-600 dark:text-brand-500 my-4">25:00</div>
+        <div class="flex justify-center gap-2">
+          <button id="pomo-btn" onclick="togglePomodoro()" class="px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white text-sm font-medium rounded-lg transition-all">Start</button>
+          <button onclick="resetPomodoro()" class="px-4 py-2 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-sm font-medium rounded-lg transition-all">Reset</button>
+        </div>
+      </div>
+
+      <!-- Quick Task Manager -->
+      <div class="p-6 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-4">
+        <h3 class="font-bold text-base">📋 Tugas Hari Ini</h3>
+        <div class="flex gap-2">
+          <input type="text" id="task-input" placeholder="Tambah tugas..." class="flex-1 px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:outline-none focus:border-brand-600">
+          <button onclick="addTask()" class="px-3 py-2 bg-brand-600 hover:bg-brand-700 text-white text-sm font-medium rounded-lg">+</button>
+        </div>
+        <div id="task-list" class="space-y-2 max-h-60 overflow-y-auto"></div>
+      </div>
+
+    </aside>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
