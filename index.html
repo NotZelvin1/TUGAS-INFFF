@@ -1,121 +1,94 @@
 <!DOCTYPE html>
-<html lang="id" class="scroll-smooth">
+<html lang="id" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EduFocus - Learning Dashboard</title>
-
-  <!-- Custom CSS -->
+  <title>EduFocus - Dashboard</title>
   <link rel="stylesheet" href="style.css">
-
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          colors: {
-            brand: { 500: '#3b82f6', 600: '#2563eb', 700: '#1d4ed8' }
-          }
-        }
-      }
-    }
-  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 font-sans transition-colors duration-200">
+<body>
 
-  <!-- Header / Navbar -->
-  <header class="sticky top-0 z-40 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 shadow-sm">
-    <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
-      <div class="flex items-center gap-2">
-        <span class="text-2xl">⚡</span>
-        <h1 class="text-xl font-bold text-brand-600 dark:text-brand-500">EduFocus</h1>
+  <header class="navbar">
+    <div class="nav-container">
+      <div class="brand">
+        <span class="logo-icon">⚡</span>
+        <h2>EduFocus</h2>
       </div>
 
-      <nav class="flex items-center gap-2">
-        <a href="index.html" class="px-3 py-2 text-sm font-medium rounded-lg bg-brand-600 text-white">Dashboard</a>
-        <a href="materi.html" class="px-3 py-2 text-sm font-medium rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700">Materi</a>
-        <a href="ai.html" class="px-3 py-2 text-sm font-medium rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700">AI Assistant</a>
-        <button id="theme-toggle" onclick="toggleTheme()" class="p-2 text-lg rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700">🌙</button>
-      </nav>
+      <div class="search-box">
+        <input type="text" id="global-search" placeholder="Cari materi, alat, atau tugas..." />
+        <button class="btn-search">Cari</button>
+      </div>
+
+      <div class="nav-controls">
+        <a href="index.html" class="nav-btn active">Dashboard</a>
+        <a href="materi.html" class="nav-btn">Materi</a>
+        <a href="tugas.html" class="nav-btn">Tugas</a>
+        <a href="pomodoro.html" class="nav-btn">Pomodoro</a>
+        <a href="ai.html" class="nav-btn">AI Assistant</a>
+        <button id="theme-toggle" class="btn-icon" onclick="toggleTheme()" title="Ubah Mode Tampilan">🌙</button>
+      </div>
     </div>
   </header>
 
-  <!-- Main Content Layout -->
-  <main class="max-w-7xl mx-auto px-4 py-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
-    
-    <!-- Kolom Utama: Upload Materi & Quick Status -->
-    <section class="lg:col-span-2 space-y-6">
-      
-      <!-- Upload Card -->
-      <div class="p-6 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-4">
-        <div>
-          <h2 class="text-lg font-bold">📁 Upload Materi & Dokumen</h2>
-          <p class="text-sm text-slate-500 dark:text-slate-400">Unggah file PDF/Dokumen ke database agar dapat dibaca oleh AI Assistant.</p>
-        </div>
-
-        <div class="space-y-3 p-4 bg-slate-50 dark:bg-slate-900 border border-dashed border-slate-300 dark:border-slate-700 rounded-lg">
-          <div class="flex items-center gap-4">
-            <input type="file" id="material-file-input" accept=".pdf,.docx,.doc,.txt" class="hidden" onchange="processFileUpload(event)">
-            <button onclick="document.getElementById('material-file-input').click()" class="px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white text-sm font-medium rounded-lg shadow-sm transition-all">
-              📎 Pilih File Dokumen
-            </button>
-            <span id="file-upload-status" class="text-sm text-slate-500 dark:text-slate-400">Belum ada file dipilih.</span>
-          </div>
-
-          <!-- Progress Bar -->
-          <div id="progress-container" class="hidden space-y-1 pt-2">
-            <div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-3 overflow-hidden">
-              <div id="progress-bar" class="bg-brand-600 h-3 rounded-full transition-all duration-150" style="width: 0%"></div>
-            </div>
-            <div class="flex justify-between text-xs text-slate-500 dark:text-slate-400 font-mono">
-              <span id="progress-text">Memuat...</span>
-              <span id="progress-percent">0%</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Daftar Dokumen Tersimpan -->
-        <div>
-          <div class="flex items-center justify-between mb-2">
-            <h3 class="text-sm font-semibold">Dokumen Terbaru:</h3>
-            <a href="materi.html" class="text-xs text-brand-600 dark:text-brand-500 hover:underline">Lihat Semua di Halaman Materi &rarr;</a>
-          </div>
-          <ul id="context-file-items" class="divide-y divide-slate-100 dark:divide-slate-700 text-sm">
-            <li class="py-2 text-slate-400">Memuat data...</li>
-          </ul>
+  <main class="main-layout">
+    <aside class="sidebar">
+      <div class="card">
+        <h3>Filter Mata Pelajaran</h3>
+        <div class="filter-group">
+          <label class="filter-item"><input type="checkbox" checked> Semua Subjek</label>
+          <label class="filter-item"><input type="checkbox"> Matematika</label>
+          <label class="filter-item"><input type="checkbox"> Pemrograman & Sains</label>
+          <label class="filter-item"><input type="checkbox"> Bahasa & Literasi</label>
         </div>
       </div>
 
-    </section>
-
-    <!-- Sidebar: Widget Pomodoro & Task Quick View -->
-    <aside class="space-y-6">
-      
-      <!-- Timer Pomodoro -->
-      <div class="p-6 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm text-center">
-        <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-2">Sesi Fokus Pomodoro</h3>
-        <div id="timer-display" class="text-5xl font-mono font-bold text-brand-600 dark:text-brand-500 my-4">25:00</div>
-        <div class="flex justify-center gap-2">
-          <button id="pomo-btn" onclick="togglePomodoro()" class="px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white text-sm font-medium rounded-lg transition-all">Start</button>
-          <button onclick="resetPomodoro()" class="px-4 py-2 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-sm font-medium rounded-lg transition-all">Reset</button>
-        </div>
+      <div class="card">
+        <h3>Akses Cepat</h3>
+        <ul class="quick-links">
+          <li><a href="pomodoro.html">⏱️ Pomodoro Timer</a></li>
+          <li><a href="tugas.html">📋 Daftar Tugas</a></li>
+          <li><a href="ai.html">🤖 EduAI Assistant</a></li>
+        </ul>
       </div>
-
-      <!-- Quick Task Manager -->
-      <div class="p-6 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-4">
-        <h3 class="font-bold text-base">📋 Tugas Hari Ini</h3>
-        <div class="flex gap-2">
-          <input type="text" id="task-input" placeholder="Tambah tugas..." class="flex-1 px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg text-sm focus:outline-none focus:border-brand-600">
-          <button onclick="addTask()" class="px-3 py-2 bg-brand-600 hover:bg-brand-700 text-white text-sm font-medium rounded-lg">+</button>
-        </div>
-        <div id="task-list" class="space-y-2 max-h-60 overflow-y-auto"></div>
-      </div>
-
     </aside>
+
+    <section class="content-area">
+      <div class="card recommendation-banner">
+        <h2>Selamat Datang di EduFocus</h2>
+        <p>Rekomendasi hari ini: Selesaikan 2 sesi Pomodoro untuk menjaga konsentrasi belajar Anda.</p>
+      </div>
+
+      <div class="grid-2">
+        <div class="card text-center">
+          <h3>Pomodoro Quick Start</h3>
+          <p id="pomo-status" class="badge">Focus Session</p>
+          <div id="timer-display" class="timer-clock">25:00</div>
+          <div class="button-group">
+            <button id="pomo-btn" class="btn btn-primary" onclick="togglePomodoro()">Start</button>
+            <button class="btn btn-secondary" onclick="resetPomodoro()">Reset</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>Riwayat Aktivitas</h3>
+          <ul id="calendar-log" class="history-list"></ul>
+        </div>
+      </div>
+    </section>
   </main>
 
   <script src="script.js"></script>
+  <script>
+    function toggleTheme() {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      const targetTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', targetTheme);
+      document.getElementById('theme-toggle').innerText = targetTheme === 'dark' ? '☀️' : '🌙';
+    }
+  </script>
 </body>
 </html>
