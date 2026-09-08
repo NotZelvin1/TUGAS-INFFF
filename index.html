@@ -11,6 +11,7 @@
 </head>
 <body>
 
+  <!-- NAVBAR / HEADER -->
   <header class="navbar">
     <div class="nav-container">
       <div class="brand">
@@ -34,7 +35,9 @@
     </div>
   </header>
 
+  <!-- MAIN LAYOUT DASHBOARD -->
   <main class="main-layout">
+    <!-- SIDEBAR LEFT -->
     <aside class="sidebar">
       <div class="card">
         <h3>Filter Mata Pelajaran</h3>
@@ -56,13 +59,60 @@
       </div>
     </aside>
 
+    <!-- CONTENT AREA RIGHT -->
     <section class="content-area">
+      <!-- WELCOME BANNER -->
       <div class="card recommendation-banner">
         <h2>Selamat Datang di EduFocus</h2>
-        <p>Rekomendasi hari ini: Selesaikan 2 sesi Pomodoro untuk menjaga konsentrasi belajar Anda.</p>
+        <p>Rekomendasi hari ini: Unggah materi PDF atau tugas Anda dan kelola dengan bantuan AI Assistant!</p>
       </div>
 
+      <!-- GRID 1: UPLOAD & DAFTAR TUGAS -->
       <div class="grid-2">
+        <!-- CARD UPLOAD MATERI / TUGAS -->
+        <div class="card">
+          <h3>📁 Unggah Materi / Tugas</h3>
+          <p class="subtitle">Upload dokumen PDF/Docx ke database untuk dibaca oleh EduAI Assistant.</p>
+          
+          <div class="upload-box">
+            <input type="file" id="material-file-input" accept=".pdf,.docx,.doc,.txt" style="display: none;" onchange="processFileUpload(event)">
+            <button class="btn btn-primary" onclick="document.getElementById('material-file-input').click()">📎 Pilih File Dokumen</button>
+            <p id="file-upload-status" class="file-status">Belum ada file dipilih.</p>
+          </div>
+
+          <!-- Progress Bar Upload -->
+          <div id="progress-container" class="progress-container" style="display: none;">
+            <div class="progress-bar-bg">
+              <div id="progress-bar" class="progress-bar-fill" style="width: 0%;"></div>
+            </div>
+            <div class="progress-info">
+              <span id="progress-text">Mengunggah...</span>
+              <span id="progress-percent">0%</span>
+            </div>
+          </div>
+
+          <div class="recent-uploads">
+            <h4>Dokumen Terbaru Tersimpan:</h4>
+            <ul id="context-file-items" class="file-list">
+              <li>Memuat data...</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- CARD DAFTAR TUGAS -->
+        <div class="card">
+          <h3>📋 Daftar Tugas Hari Ini</h3>
+          <div class="input-group">
+            <input type="text" id="task-input" placeholder="Tambah tugas baru..." />
+            <button class="btn btn-primary" onclick="addTask()">+</button>
+          </div>
+          <div id="task-list" class="task-list"></div>
+        </div>
+      </div>
+
+      <!-- GRID 2: POMODORO & RIWAYAT -->
+      <div class="grid-2">
+        <!-- CARD POMODORO QUICK START -->
         <div class="card text-center">
           <h3>Pomodoro Quick Start</h3>
           <p id="pomo-status" class="badge">Focus Session</p>
@@ -73,22 +123,17 @@
           </div>
         </div>
 
+        <!-- CARD RIWAYAT AKTIVITAS -->
         <div class="card">
           <h3>Riwayat Aktivitas</h3>
-          <ul id="calendar-log" class="history-list"></ul>
+          <ul id="calendar-log" class="history-list">
+            <li>Sistem siap digunakan.</li>
+          </ul>
         </div>
       </div>
     </section>
   </main>
 
   <script src="script.js"></script>
-  <script>
-    function toggleTheme() {
-      const currentTheme = document.documentElement.getAttribute('data-theme');
-      const targetTheme = currentTheme === 'dark' ? 'light' : 'dark';
-      document.documentElement.setAttribute('data-theme', targetTheme);
-      document.getElementById('theme-toggle').innerText = targetTheme === 'dark' ? '☀️' : '🌙';
-    }
-  </script>
 </body>
 </html>
