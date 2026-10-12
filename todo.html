@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>To-do · Ruang Belajar</title>
+<script src="js/tema-awal.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/todo.css">
+</head>
+<body data-page="todo" data-mode="fokus">
+<!-- Header, navigasi bawah, dialog "Cara pakai", dan toast dipasang oleh js/common.js -->
+
+<section id="todo" class="halaman" aria-label="To-do">
+  <div class="isi">
+    <h1 class="todo-judul">To-do</h1>
+    <p class="todo-sub">Catat apa yang harus dikerjakan beserta tenggatnya. Tugas yang tenggatnya dekat akan berubah merah.</p>
+    <div class="todo-ringkas" id="todoRingkas"></div>
+    <form id="formTodo" autocomplete="off">
+      <input id="tTeks" type="text" maxlength="200" required placeholder="Apa yang harus dikerjakan?" aria-label="Tugas">
+      <input id="tTenggat" type="date" aria-label="Tanggal tenggat" title="Tanggal tenggat">
+      <input id="tJam" type="time" aria-label="Jam tenggat (opsional)" title="Jam tenggat (opsional)">
+      <button class="btn primary" type="submit">Tambah</button>
+    </form>
+    <div class="todo-filter" id="todoFilter">
+      <button class="btn small" data-f="semua" aria-pressed="true">Semua</button>
+      <button class="btn small" data-f="aktif" aria-pressed="false">Aktif</button>
+      <button class="btn small" data-f="selesai" aria-pressed="false">Selesai</button>
+      <span class="spasi"></span>
+      <button class="btn small" id="todoBersih">Hapus yang selesai</button>
+    </div>
+    <ul id="todoList"></ul>
+  </div>
+</section>
+
+<dialog id="dlgTodo">
+  <h1>Ubah tugas</h1>
+  <p class="sub">Perbarui tugas atau tenggatnya.</p>
+  <form id="formEditTodo" autocomplete="off">
+    <label for="etTeks">Tugas</label>
+    <input id="etTeks" maxlength="200" required>
+    <div class="baris" style="grid-template-columns: 1.4fr 1fr">
+      <div><label for="etTenggat">Tenggat</label><input id="etTenggat" type="date"></div>
+      <div><label for="etJam">Jam (opsional)</label><input id="etJam" type="time"></div>
+    </div>
+    <div class="aksi">
+      <button type="button" class="btn" id="etBatal">Batal</button>
+      <button type="submit" class="btn primary">Simpan</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="js/config.js"></script>
+<script src="js/common.js"></script>
+<script src="js/todo.js"></script>
+</body>
+</html>

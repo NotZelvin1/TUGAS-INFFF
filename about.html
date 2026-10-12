@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About · Ruang Belajar</title>
+<script src="js/tema-awal.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/about.css">
+</head>
+<body data-page="about" data-mode="fokus">
+<!-- Header, navigasi bawah, dialog "Cara pakai", dan toast dipasang oleh js/common.js -->
+
+<section id="about" class="halaman" aria-label="About">
+  <div class="isi about">
+    <div id="aboutLihat">
+      <p class="eyebrow">Tentang</p>
+      <h1 id="aboutJudul"></h1>
+      <div class="badan" id="aboutBadan"></div>
+      <div class="alat"><button class="btn small" id="aboutUbah">Ubah teks</button></div>
+    </div>
+    <form id="aboutForm" hidden autocomplete="off">
+      <label for="abJudul">Judul</label>
+      <input id="abJudul" maxlength="120">
+      <label for="abTeks">Isi</label>
+      <textarea id="abTeks" maxlength="8000"></textarea>
+      <p class="petunjuk">Pisahkan paragraf dengan satu baris kosong.</p>
+      <div class="alat">
+        <button type="button" class="btn danger kiri" id="abReset">Kembalikan ke teks bawaan</button>
+        <button type="button" class="btn" id="abBatal">Batal</button>
+        <button type="submit" class="btn primary">Simpan</button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="js/config.js"></script>
+<script src="js/common.js"></script>
+<script src="js/about.js"></script>
+</body>
+</html>

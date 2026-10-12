@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kalender · Ruang Belajar</title>
+<script src="js/tema-awal.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/kalender.css">
+</head>
+<body data-page="kalender" data-mode="fokus">
+<!-- Header, navigasi bawah, dialog "Cara pakai", dan toast dipasang oleh js/common.js -->
+
+<section id="kalender" aria-label="Kalender">
+  <div class="kal-utama">
+    <div class="kal-bar">
+      <h2 id="kalJudul"></h2>
+      <button class="btn small" id="kalPrev" aria-label="Bulan sebelumnya">&larr;</button>
+      <button class="btn small" id="kalHariIni">Hari ini</button>
+      <button class="btn small" id="kalNext" aria-label="Bulan berikutnya">&rarr;</button>
+      <span class="spasi"></span>
+      <button class="btn primary" id="kalTambah">+ Acara</button>
+    </div>
+    <div class="kalgrid" id="kalGrid"></div>
+  </div>
+  <aside class="kal-samping">
+    <h2>Tanggal dipilih</h2>
+    <p class="tgl-judul" id="sampingTgl"></p>
+    <ul class="agenda" id="agendaHari"></ul>
+    <button class="btn small" id="sampingTambah">+ Tambah di tanggal ini</button>
+    <h2>Mendatang</h2>
+    <ul class="agenda" id="agendaNanti"></ul>
+  </aside>
+</section>
+
+<dialog id="dlgAcara">
+  <h1 id="acaraHeading">Acara baru</h1>
+  <p class="sub" id="acaraSub">Tugas, ujian, atau jadwal belajar.</p>
+  <form id="formAcara" autocomplete="off">
+    <label for="aJudul">Judul</label>
+    <input id="aJudul" maxlength="120" required placeholder="Mis. Kumpul laporan Basis Data">
+    <div class="baris">
+      <div><label for="aTanggal">Tanggal</label><input id="aTanggal" type="date" required></div>
+      <div><label for="aMulai">Mulai</label><input id="aMulai" type="time"></div>
+      <div><label for="aSelesai">Selesai</label><input id="aSelesai" type="time"></div>
+    </div>
+    <label for="aKategori">Kategori</label>
+    <select id="aKategori">
+      <option value="tugas">Tugas</option>
+      <option value="ujian">Ujian</option>
+      <option value="belajar">Belajar</option>
+      <option value="lainnya">Lainnya</option>
+    </select>
+    <label for="aMateri">Tautkan ke materi (opsional)</label>
+    <select id="aMateri"></select>
+    <label for="aCatatan">Catatan</label>
+    <textarea id="aCatatan" maxlength="500"></textarea>
+    <div class="aksi">
+      <button type="button" class="btn danger kiri" id="aHapus">Hapus</button>
+      <button type="button" class="btn" id="aBatal">Batal</button>
+      <button type="submit" class="btn primary">Simpan</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="js/config.js"></script>
+<script src="js/common.js"></script>
+<script src="js/kalender.js"></script>
+</body>
+</html>

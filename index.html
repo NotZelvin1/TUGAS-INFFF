@@ -1,139 +1,59 @@
-<!DOCTYPE html>
-<html lang="id" data-theme="light">
+<!doctype html>
+<html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EduFocus - Dashboard</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Belajar · Ruang Belajar</title>
+<script src="js/tema-awal.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/belajar.css">
 </head>
-<body>
+<body data-page="belajar" data-mode="fokus" data-view="reader">
+<!-- Header, navigasi bawah, dialog "Cara pakai", dan toast dipasang oleh js/common.js -->
 
-  <!-- NAVBAR / HEADER -->
-  <header class="navbar">
-    <div class="nav-container">
-      <div class="brand">
-        <span class="logo-icon">⚡</span>
-        <h2>EduFocus</h2>
-      </div>
+<main>
+  <section id="lib" aria-label="Daftar materi">
+    <label class="upload" id="dropzone">
+      Tambah materi
+      <small>PDF, TXT, atau MD (maks. 25 MB)</small>
+      <input type="file" id="berkas" accept=".pdf,.txt,.md,application/pdf,text/plain,text/markdown">
+    </label>
+    <h2>Materi saya</h2>
+    <ul id="daftar"></ul>
+  </section>
 
-      <div class="search-box">
-        <input type="text" id="global-search" placeholder="Cari materi, alat, atau tugas..." />
-        <button class="btn-search">Cari</button>
-      </div>
+  <section id="reader" aria-label="Pembaca materi">
+    <div class="kosong"><strong>Belum ada materi yang dibuka</strong>Pilih materi di daftar, atau unggah PDF/TXT. Timer Pomodoro tetap berjalan selama kamu membaca.</div>
+  </section>
 
-      <div class="nav-controls">
-        <a href="index.html" class="nav-btn active">Dashboard</a>
-        <a href="materi.html" class="nav-btn">Materi</a>
-        <a href="tugas.html" class="nav-btn">Tugas</a>
-        <a href="pomodoro.html" class="nav-btn">Pomodoro</a>
-        <a href="ai.html" class="nav-btn">AI Assistant</a>
-        <button id="theme-toggle" class="btn-icon" onclick="toggleTheme()" title="Ubah Mode Tampilan">🌙</button>
-      </div>
+  <section id="chat" aria-label="Tanya AI">
+    <h2>Tanya AI tentang materi ini</h2>
+    <div id="pesan"></div>
+    <div class="chips" id="chips">
+      <button data-q="Ringkas materi ini dalam poin-poin utama.">Ringkas materi</button>
+      <button data-q="Buat 5 soal latihan beserta jawabannya dari materi ini.">Buat soal latihan</button>
+      <button data-q="Jelaskan konsep paling penting di materi ini dengan bahasa sederhana.">Jelaskan konsep utama</button>
     </div>
-  </header>
+    <form id="formTanya" autocomplete="off">
+      <input id="inputTanya" placeholder="Tulis pertanyaan…" maxlength="1000">
+      <button class="btn primary" id="kirim">Kirim</button>
+    </form>
+  </section>
+</main>
 
-  <!-- MAIN LAYOUT DASHBOARD -->
-  <main class="main-layout">
-    <!-- SIDEBAR LEFT -->
-    <aside class="sidebar">
-      <div class="card">
-        <h3>Filter Mata Pelajaran</h3>
-        <div class="filter-group">
-          <label class="filter-item"><input type="checkbox" checked> Semua Subjek</label>
-          <label class="filter-item"><input type="checkbox"> Matematika</label>
-          <label class="filter-item"><input type="checkbox"> Pemrograman & Sains</label>
-          <label class="filter-item"><input type="checkbox"> Bahasa & Literasi</label>
-        </div>
-      </div>
+<nav class="tabs" role="tablist" aria-label="Bagian belajar">
+  <button role="tab" data-view="lib">Materi</button>
+  <button role="tab" data-view="reader">Baca</button>
+  <button role="tab" data-view="chat">Tanya AI</button>
+</nav>
 
-      <div class="card">
-        <h3>Akses Cepat</h3>
-        <ul class="quick-links">
-          <li><a href="pomodoro.html">⏱️ Pomodoro Timer</a></li>
-          <li><a href="tugas.html">📋 Daftar Tugas</a></li>
-          <li><a href="ai.html">🤖 EduAI Assistant</a></li>
-        </ul>
-      </div>
-    </aside>
-
-    <!-- CONTENT AREA RIGHT -->
-    <section class="content-area">
-      <!-- WELCOME BANNER -->
-      <div class="card recommendation-banner">
-        <h2>Selamat Datang di EduFocus</h2>
-        <p>Rekomendasi hari ini: Unggah materi PDF atau tugas Anda dan kelola dengan bantuan AI Assistant!</p>
-      </div>
-
-      <!-- GRID 1: UPLOAD & DAFTAR TUGAS -->
-      <div class="grid-2">
-        <!-- CARD UPLOAD MATERI / TUGAS -->
-        <div class="card">
-          <h3>📁 Unggah Materi / Tugas</h3>
-          <p class="subtitle">Upload dokumen PDF/Docx ke database untuk dibaca oleh EduAI Assistant.</p>
-          
-          <div class="upload-box">
-            <input type="file" id="material-file-input" accept=".pdf,.docx,.doc,.txt" style="display: none;" onchange="processFileUpload(event)">
-            <button class="btn btn-primary" onclick="document.getElementById('material-file-input').click()">📎 Pilih File Dokumen</button>
-            <p id="file-upload-status" class="file-status">Belum ada file dipilih.</p>
-          </div>
-
-          <!-- Progress Bar Upload -->
-          <div id="progress-container" class="progress-container" style="display: none;">
-            <div class="progress-bar-bg">
-              <div id="progress-bar" class="progress-bar-fill" style="width: 0%;"></div>
-            </div>
-            <div class="progress-info">
-              <span id="progress-text">Mengunggah...</span>
-              <span id="progress-percent">0%</span>
-            </div>
-          </div>
-
-          <div class="recent-uploads">
-            <h4>Dokumen Terbaru Tersimpan:</h4>
-            <ul id="context-file-items" class="file-list">
-              <li>Memuat data...</li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- CARD DAFTAR TUGAS -->
-        <div class="card">
-          <h3>📋 Daftar Tugas Hari Ini</h3>
-          <div class="input-group">
-            <input type="text" id="task-input" placeholder="Tambah tugas baru..." />
-            <button class="btn btn-primary" onclick="addTask()">+</button>
-          </div>
-          <div id="task-list" class="task-list"></div>
-        </div>
-      </div>
-
-      <!-- GRID 2: POMODORO & RIWAYAT -->
-      <div class="grid-2">
-        <!-- CARD POMODORO QUICK START -->
-        <div class="card text-center">
-          <h3>Pomodoro Quick Start</h3>
-          <p id="pomo-status" class="badge">Focus Session</p>
-          <div id="timer-display" class="timer-clock">25:00</div>
-          <div class="button-group">
-            <button id="pomo-btn" class="btn btn-primary" onclick="togglePomodoro()">Start</button>
-            <button class="btn btn-secondary" onclick="resetPomodoro()">Reset</button>
-          </div>
-        </div>
-
-        <!-- CARD RIWAYAT AKTIVITAS -->
-        <div class="card">
-          <h3>Riwayat Aktivitas</h3>
-          <ul id="calendar-log" class="history-list">
-            <li>Sistem siap digunakan.</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <script src="script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="js/config.js"></script>
+<script src="js/common.js"></script>
+<script src="js/belajar.js"></script>
 </body>
 </html>
