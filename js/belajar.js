@@ -144,7 +144,7 @@ async function hapusMateri(m) {
    PEMBACA
    ============================================================ */
 function tampilKosong() {
-  $("#judulAktif").textContent = "";
+  $("#judulAktif").textContent = ""; $("#judulAktif").title = "";
   $("#reader").replaceChildren(buat("div", { className: "kosong" },
     buat("strong", { textContent: "Belum ada materi yang dibuka" }),
     "Pilih materi di daftar, atau unggah PDF/TXT. Timer Pomodoro tetap berjalan selama kamu membaca."));
@@ -153,7 +153,7 @@ function tampilKosong() {
 async function bukaMateri(id) {
   const meta = daftarMateri.find((m) => m.id === id); if (!meta) return;
   aktif = meta; simpanMateriTerakhir(id); renderDaftar();
-  $("#judulAktif").textContent = meta.judul;
+  $("#judulAktif").textContent = meta.judul; $("#judulAktif").title = meta.judul;   // tooltip berisi judul lengkap
   setView("reader");
   const area = $("#reader"); area.scrollTop = 0;
   area.replaceChildren(buat("div", { className: "kosong", textContent: "Memuat materi…" }));

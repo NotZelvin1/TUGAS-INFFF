@@ -4,7 +4,7 @@
    ============================================================ */
 
 /* ---------- Tata letak utama ---------- */
-main { display: grid; grid-template-columns: 260px minmax(0, 1fr) 380px; min-height: 0; }
+main { display: grid; grid-template-columns: 300px minmax(0, 1fr) 380px; min-height: 0; }
 main > section { min-height: 0; overflow: auto; }
 #lib { background: var(--card); border-right: 1px solid var(--line); padding: 14px; }
 #chat { background: var(--card); border-left: 1px solid var(--line); display: flex; flex-direction: column; overflow: hidden; }
@@ -18,13 +18,14 @@ main > section { min-height: 0; overflow: auto; }
 .upload small { display: block; font-weight: 400; color: var(--muted); }
 .upload input { display: none; }
 
-#daftar { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
-#daftar li { display: flex; align-items: center; gap: 4px; border-radius: 8px; }
+#daftar { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 4px; }
+#daftar li { display: flex; align-items: flex-start; gap: 4px; border-radius: 8px; }
 #daftar li.aktif { background: var(--paper); box-shadow: inset 3px 0 0 var(--accent); }
 #daftar .buka { flex: 1; min-width: 0; text-align: left; border: 0; background: none; padding: 8px 10px; }
-#daftar .judul { display: block; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* Judul ditampilkan utuh: turun ke baris berikutnya, tidak dipotong. */
+#daftar .judul { display: block; font-weight: 600; white-space: normal; overflow-wrap: anywhere; line-height: 1.3; }
 #daftar .meta { display: block; font-size: 12px; color: var(--muted); }
-#daftar .hapus { border: 0; background: none; color: var(--muted); padding: 6px 8px; border-radius: 6px; }
+#daftar .hapus { flex: none; margin-top: 6px; border: 0; background: none; color: var(--muted); padding: 5px 6px; font-size: 13px; border-radius: 6px; }
 #daftar .hapus:hover { color: var(--danger); background: var(--paper); }
 
 .kosong { color: var(--muted); padding: 24px; max-width: 46ch; margin: 10vh auto 0; text-align: center; }
