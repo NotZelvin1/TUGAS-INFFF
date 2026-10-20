@@ -50,32 +50,76 @@ async function ekstrakPdf(buf) {
   return { isi, halaman: pdf.numPages };
 }
 
+/* ---------- Materi menyesuaikan nama file yang diunggah ---------- */
+
+// "bab-3_jaringan-komputer (1).PDF" -> "Bab 3 Jaringan Komputer"
+function judulDariNamaFile(nama) {
+  let t = nama.replace(/\.(pdf|txt|md|markdown|text)$/i, "");   // buang ekstensi yang dikenal
+  try { t = decodeURIComponent(t); } catch {}                    // "Bab%203" -> "Bab 3"
+  t = t.replace(/[_\-]+/g, " ");
+  t = t.replace(/(\d)?\.(\d)?/g, (m, a, b) => (a && b ? m : (a || "") + " " + (b || "")));   // "bab.1.final" -> "bab 1 final", tapi "3.1" tetap
+  t = t.replace(/\s+/g, " ").trim();
+  t = t.replace(/\s*\(\d+\)$/, "").trim();                       // akhiran " (1)" dari browser
+  // satu kata panjang bergaya CamelCase: "MateriJaringanKomputer" -> "Materi Jaringan Komputer"
+  if (!t.includes(" ") && (t.match(/[a-z][A-Z]/g) || []).length >= 2) t = t.replace(/([a-z])([A-Z])/g, "$1 $2");
+  // semua huruf kecil -> awal tiap kata dikapitalkan. Judul huruf besar/campuran dibiarkan (mis. singkatan).
+  if (t === t.toLowerCase()) t = t.replace(/(^|\s)(\p{L})/gu, (_, sp, h) => sp + h.toUpperCase());
+  t = t.slice(0, 110).trim();
+  return t || "Materi " + new Date().toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" });
+}
+
+// Judul yang sudah ada diberi nomor: "Judul", "Judul (2)", "Judul (3)", ...
+function judulUnik(dasar) {
+  const ada = new Set(daftarMateri.map((m) => m.judul.toLowerCase()));
+  if (!ada.has(dasar.toLowerCase())) return dasar;
+  let n = 2; while (ada.has((dasar + " (" + n + ")").toLowerCase())) n++;
+  return dasar + " (" + n + ")";
+}
+
+// Jenis file dikenali dari ekstensi, tipe MIME, atau isinya, jadi nama file apa pun boleh
+// (huruf besar, banyak titik, atau tanpa ekstensi sama sekali).
+async function jenisFile(file) {
+  const nama = file.name.toLowerCase();
+  const ext = nama.includes(".") ? nama.split(".").pop() : "";
+  if (ext === "pdf" || file.type === "application/pdf") return "pdf";
+  if (["txt", "md", "markdown", "text"].includes(ext) || file.type === "text/plain" || file.type === "text/markdown") return "teks";
+  const kepala = new Uint8Array(await file.slice(0, 4096).arrayBuffer());
+  if (String.fromCharCode(...kepala.slice(0, 5)) === "%PDF-") return "pdf";
+  if (!ext && !kepala.includes(0)) return "teks";   // tanpa ekstensi dan tidak berisi data biner
+  return null;
+}
+
 async function unggah(file) {
-  const ext = (file.name.split(".").pop() || "").toLowerCase();
-  if (!["pdf", "txt", "md"].includes(ext)) { toast("Format belum didukung. Pakai PDF, TXT, atau MD."); return; }
+  if (!file.size) { toast("File “" + file.name + "” kosong."); return; }
   if (file.size > MAKS_UKURAN) { toast("Ukuran file maksimal 25 MB."); return; }
+  const jenis = await jenisFile(file);
+  if (!jenis) { toast("Format “" + file.name + "” belum didukung. Pakai PDF, TXT, atau MD."); return; }
   const label = $("#dropzone"); label.style.opacity = .6; label.style.pointerEvents = "none";
   try {
-    toast("Membaca file…");
+    toast("Membaca “" + file.name + "”…");
     let isi = "", halaman = null;
-    if (ext === "pdf") {
+    if (jenis === "pdf") {
       // slice(0) supaya buffer asli tidak "terpakai" oleh pdf.js
       const r = await ekstrakPdf((await file.arrayBuffer()).slice(0)); isi = r.isi; halaman = r.halaman;
       if (r.isi.replace(/\[Halaman \d+\]/g, "").trim().length < 50)
         toast("PDF ini tampaknya hasil scan: bisa dibaca, tapi AI belum bisa membaca isinya.");
-    } else isi = await file.text();
+    } else {
+      isi = await file.text();
+      if (!isi.trim()) throw new Error("file teks ini tidak berisi tulisan");
+    }
 
-    const path = crypto.randomUUID() + "." + ext;
-    const up = await sb.storage.from(BUCKET).upload(path, file, { contentType: ext === "pdf" ? "application/pdf" : "text/plain" });
+    // Nama di storage dibuat acak, jadi nama file seaneh apa pun (spasi, emoji, simbol) aman.
+    const path = crypto.randomUUID() + (jenis === "pdf" ? ".pdf" : ".txt");
+    const up = await sb.storage.from(BUCKET).upload(path, file, { contentType: jenis === "pdf" ? "application/pdf" : "text/plain" });
     if (up.error) throw up.error;
 
+    const judul = judulUnik(judulDariNamaFile(file.name));
     const { data, error } = await sb.from("materi").insert({
-      judul: file.name.replace(/\.[^.]+$/, ""), tipe: ext === "pdf" ? "pdf" : "teks",
-      file_path: path, isi: isi.slice(0, MAKS_TEKS), jumlah_halaman: halaman,
+      judul, tipe: jenis, file_path: path, isi: isi.slice(0, MAKS_TEKS), jumlah_halaman: halaman,
     }).select("id").single();
     if (error) { await sb.storage.from(BUCKET).remove([path]); throw error; }
 
-    await muatMateri(); await bukaMateri(data.id); toast("Materi tersimpan.");
+    await muatMateri(); await bukaMateri(data.id); toast("Materi tersimpan sebagai “" + judul + "”.");
   } catch (e) {
     toast("Gagal mengunggah: " + (e.message || e));
   } finally { label.style.opacity = 1; label.style.pointerEvents = ""; $("#berkas").value = ""; }
